@@ -8,6 +8,8 @@ function App() {
 
   const [shouldShowAddCategory, setShouldShowAddCategory] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [shouldShowAddBill, setShouldShowAddBill] = useState(false);
+  const [bills, setBills] = useState([]);
 
   useEffect(() => {
     // checks if category list exists
