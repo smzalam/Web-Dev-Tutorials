@@ -10,6 +10,7 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [shouldShowAddBill, setShouldShowAddBill] = useState(false);
   const [bills, setBills] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('')
 
   useEffect(() => {
     // checks if category list exists
@@ -18,13 +19,19 @@ function App() {
     const categoriesInLocalStorage = JSON.parse(
       localStorage.getItem('categories')
     )
+    const billsInLocalStorage = JSON.parse(
+      localStorage.getItem('bills')
+    )
 
-    if (categoriesInLocalStorage !== categories) {
-      setCategories(categoriesInLocalStorage)
-    }
+    setCategories(categoriesInLocalStorage)
+    setBills(billsInLocalStorage)
 
     if (!categoriesInLocalStorage) {
       setShouldShowAddCategory(true)
+    }
+
+    if (!billsInLocalStorage) {
+      setShouldShowAddBill(true)
     }
   }, [])
 
@@ -38,9 +45,44 @@ function App() {
     localStorage.setItem('categories', JSON.stringify(updatedCategories))
   }
 
+  const addBills = (amount, category, date) => {
+    const bill = { amount, category, date }
+    const updatedBills = [...(bills || []), bill]
+    setBills(updatedBills)
+    setShouldShowAddBill(false)
+    localStorage.setItem('bills', JSON.stringify(updatedBills))
+  }
+
   const showAddCategory = () => {
     setShouldShowAddCategory(true)
   }
+
+  const showAddBill = () => {
+    setShouldShowAddBill(true)
+  }
+
+  const removeBill = index => {
+    let updatedBills = [...bills]
+    updatedBills = updatedBills
+      .slice(0, index)
+      .concat(updatedBills.slice(index + 1, updatedBills.length))
+    setBills(updatedBills)
+    localStorage.setItem('bills', JSON.stringify(updatedBills))
+  }
+
+  const activeBills = () => {
+    return bills
+      ?.filter(bill =>
+        activeCategory ? bill.category === activeCategory : true
+      )
+      .sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1))
+  }
+
+  const setNewActiveCategory = index => {
+    setActiveCategory(index)
+  }
+
+
 
   return (
     <div>
@@ -49,10 +91,12 @@ function App() {
       {/* shows normal bills list if false */}
       {shouldShowAddCategory ? (
         <AddCategory onSubmit={addCategory} />
+      ) : shouldShowAddBill ? (
+        <AddBills onSubmit={addBills} categories={categories} />
       ) : (
         <div>
-          <NavBar categories={categories} showAddCategory={showAddCategory} />
-          <BillsTable />
+          <NavBar categories={categories} showAddCategory={showAddCategory} activeCategory={activeCategory} setNewActiveCategory={setNewActiveCategory} />
+          <BillsTable bills={activeBills()} showAddBill={showAddBill} removeBill={removeBill} />
         </div>
       )}
     </div>
