@@ -1,3 +1,7 @@
+## Instructions: 
+![Instructions](assets/06_instructions.png)
+
+## Diagram
 ```mermaid
 sequenceDiagram
     participant user

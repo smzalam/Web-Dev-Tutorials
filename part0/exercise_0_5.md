@@ -1,3 +1,7 @@
+## Instructions: 
+![Instructions](assets/05_instructions.png)
+
+## Diagram
 ```mermaid
 sequenceDiagram
     participant browser
