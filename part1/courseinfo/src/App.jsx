@@ -9,7 +9,6 @@ const Part = ({ part, exercises }) => {
     <p>{part} {exercises}</p>
   )
 }
-
 const Content = ({ parts }) => {
   return (
     <div>
